@@ -33,3 +33,8 @@
   
 }
 
+.countContainer {
+  display: flex;
+  justify-content: space-between;
+}
+
