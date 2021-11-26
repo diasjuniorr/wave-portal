@@ -19,7 +19,7 @@ export default function App() {
   const [currentTotalPeople, setCurrentTotalPeople] = useState(0);
   const [allWaves, setAllWaves] = useState([] as Wave[]);
   
-  const contractAddress = "0xb7101Be8644721EC0f1d466200A824d9aa605e98"
+  const contractAddress = "0xb7101Be8644721EC0f1d466200A824d9aa605e98";
   const contractABI = abi.abi;
 
   const checkIfWalletIsConnected = async () => {
