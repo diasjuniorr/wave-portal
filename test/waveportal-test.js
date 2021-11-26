@@ -11,7 +11,6 @@ describe("WavePortal", function () {
       waveContract= await waveContractFactory.deploy({value: hre.ethers.utils.parseEther('0.1')});
       await waveContract.deployed();
       resolve()
-      
     })
   })
 
@@ -21,10 +20,6 @@ describe("WavePortal", function () {
     );
     console.log("Contract balance:", hre.ethers.utils.formatEther(contractBalance));
     expect(hre.ethers.utils.formatEther(contractBalance)).to.be.equal("0.1");
-    // expect(await greeter.greet()).to.equal("Hello, world!");
-
-
-    // expect(await greeter.greet()).to.equal("Hola, mundo!");
   });
 
   it("Contract should count waves properly", async function (){
