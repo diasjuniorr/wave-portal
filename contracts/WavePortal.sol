@@ -6,33 +6,72 @@ import "hardhat/console.sol";
 
 contract WavePortal {
     uint256 totalWaves;
+    uint256 totalPeople;
 
     mapping(address => uint256) public addressToWaves;
-    uint256 public totalPeople;
+    mapping(address => uint256) public lastWavedAt;
 
+    event NewWave(address indexed from, uint256 timestamp, string message, uint256 totalWaves, uint256 totalPeople);
 
-    constructor() {
-        console.log("Yo yo, I am a contract am I am smart");
+    struct Wave {
+        address from;
+        string message;
+        uint256 timestamp;
     }
 
-    function wave() public {
+    Wave[] public waves;
+
+    uint256 private seed;
+
+    constructor() payable{
+        console.log("contract deployed");
+
+        seed = (block.timestamp + block.difficulty) % 100;
+    }
+
+    function wave(string memory _message) public {
+        require(
+            lastWavedAt[msg.sender] + 15 minutes < block.timestamp,
+            "Wait 15m"
+        );
+
+        lastWavedAt[msg.sender] = block.timestamp;
         totalWaves += 1;
-        console.log(unicode"%s has waved! 👋", msg.sender);
+
+        waves.push(Wave(msg.sender, _message, block.timestamp));
+
+        seed = (block.difficulty + block.timestamp + seed) % 100;
         
         if (addressToWaves[msg.sender] == 0 ) {
            totalPeople += 1;
        }
 
        addressToWaves[msg.sender] += 1;
-       console.log("%s people have waved at you!\n", totalPeople);
 
-       if (addressToWaves[msg.sender] %3 == 0) {
-           console.log(unicode"%s is on 🔥 and has already waved %d times!", msg.sender, addressToWaves[msg.sender]);
-       } 
+       if (seed <= 50) {
+            console.log("%s won!", msg.sender);
+
+            uint256 prizeAmount = 0.0001 ether;
+            require(
+                prizeAmount <= address(this).balance,
+                "Trying to withdraw more money than the contract has."
+            );
+            (bool success, ) = (msg.sender).call{value: prizeAmount}("");
+            require(success, "Failed to withdraw money from contract.");
+        }
+
+       emit NewWave(msg.sender, block.timestamp, _message, totalWaves, totalPeople);
     }
 
     function getTotalWaves() public view returns (uint256) {
-        console.log("We have %d total waves!\n---", totalWaves);
         return totalWaves;
+    }
+
+    function getTotalPeople() public view returns (uint256) {
+        return totalPeople;
+    }
+
+    function getAllWaves() public view returns (Wave[] memory){
+        return waves;
     }
 }
