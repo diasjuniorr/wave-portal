@@ -62,8 +62,9 @@ export default function App() {
 
       console.log("Connected", accounts[0]);
       setCurrentAccount(accounts[0]); 
+      getAllWaves()
+      getTotalStats()
     } catch (error: any) {
-      console.log("DEBUGANDO: ", error)
       toast.error(error.message);
       console.log(error)
     }
