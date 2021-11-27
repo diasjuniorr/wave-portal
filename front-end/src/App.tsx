@@ -122,7 +122,7 @@ export default function App() {
     }
  }
 
-  const setEventListener = async () => {
+  const setEventListeners = async () => {
     try {
       const { ethereum } = window;
 
@@ -131,8 +131,19 @@ export default function App() {
         const signer = provider.getSigner();
         const wavePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
 
-        wavePortalContract.on("NewWave",(from, message, timestamp) => {
-          setAllWaves([...allWaves, {from, timestamp, message}]);
+        wavePortalContract.on("NewWave",async (from, message, timestamp) => {
+          const waves = await wavePortalContract.getAllWaves();
+
+          let wavesCleaned: Wave[]= [];
+          waves.forEach((wave: Wave) => {
+            wavesCleaned.push({
+              from: wave.from,
+              timestamp: new Date(wave.timestamp as number * 1000),
+              message: wave.message
+            });
+          }); 
+          
+          setAllWaves(wavesCleaned);
         });
 
         wavePortalContract.on("NewStats", (totalWaves, totalPeople) => {
@@ -158,7 +169,6 @@ export default function App() {
 
         const waves = await wavePortalContract.getAllWaves();
         
-
         let wavesCleaned: Wave[]= [];
         waves.forEach((wave: Wave) => {
           wavesCleaned.push({
@@ -182,7 +192,7 @@ export default function App() {
     checkIfWalletIsConnected();
     getTotalStats();
     getAllWaves();
-    setEventListener();
+    setEventListeners();
   }, [])
   
   return (
@@ -207,7 +217,6 @@ export default function App() {
           Wave at Me
         </button>
 
-        <ToastContainer />
 
         <div className="countContainer">
           <div>{currentTotalWaves} waves 👋</div>
@@ -221,6 +230,7 @@ export default function App() {
             </div>)
         })}
 
+        <ToastContainer />
       </div>
     </div>
   );
