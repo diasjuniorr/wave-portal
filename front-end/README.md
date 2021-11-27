@@ -28,13 +28,14 @@ npm install
 yarn
 ```
 That's all you need. You can start the Dapp by running the `start` command in the `front-end` directory:
-````
+```
 //npm 
 npm run start
 //yarn
 yarn start
 ```
-If you wish to connect the Dapp to your own version of the smart contract, follow the [workflow](#workflow) below.
+If you wish to connect the Dapp to your own version of the smart contract, 
+follow the [workflow](#workflow) below.
 
 ## Worflow <a name = "workflow"></a>
 
