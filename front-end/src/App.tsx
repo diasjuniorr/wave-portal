@@ -234,11 +234,12 @@ export default function App() {
           Wave at Me
         </button>
 
-
+        {currentAccount &&  (
         <div className="countContainer">
           <div>{currentTotalWaves} waves 👋</div>
           <div>{currentTotalPeople} people 😎</div>
         </div>
+        )}
 
         {allWaves.map((wave, index) => {
           return (
