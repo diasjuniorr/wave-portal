@@ -1,5 +1,7 @@
 import { useEffect, useState} from "react";
 import { ethers } from "ethers";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 import abi from "./utils/WavePortal.json"
 import Message from "./components/message"
@@ -43,7 +45,8 @@ export default function App() {
       } else {
         console.log("No authorized account found")
       }
-    } catch (error) {
+    } catch (error: any) {
+      toast.error(error.message);
       console.log(error);
     }
   }
@@ -61,7 +64,8 @@ export default function App() {
 
       console.log("Connected", accounts[0]);
       setCurrentAccount(accounts[0]); 
-    } catch (error) {
+    } catch (error: any) {
+      toast.error(error.message);
       console.log(error)
     }
   }
@@ -89,7 +93,8 @@ export default function App() {
       } else {
         console.log("Ethereum object doesn't exist!");
       }
-    } catch (error) {
+    } catch (error: any) {
+      toast.error(error.message);
       console.log(error)
     }
  }
@@ -111,7 +116,8 @@ export default function App() {
       } else {
         console.log("Ethereum object doesn't exist!");
       }
-    } catch (error) {
+    } catch (error: any) {
+      toast.error(error.message);
       console.log(error)
     }
  }
@@ -200,6 +206,8 @@ export default function App() {
         <button className="waveButton" onClick={wave}>
           Wave at Me
         </button>
+
+        <ToastContainer />
 
         <div className="countContainer">
           <div>{currentTotalWaves} waves 👋</div>
