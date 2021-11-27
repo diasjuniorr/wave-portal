@@ -2,6 +2,7 @@ import { useEffect, useState} from "react";
 import { ethers } from "ethers";
 import './App.css';
 import abi from "./utils/WavePortal.json"
+import Message from "./components/message"
 
 //typescript workaround
 declare let window: any;
@@ -19,7 +20,7 @@ export default function App() {
   const [currentTotalPeople, setCurrentTotalPeople] = useState(0);
   const [allWaves, setAllWaves] = useState([] as Wave[]);
   
-  const contractAddress = "0xb7101Be8644721EC0f1d466200A824d9aa605e98";
+  const contractAddress = "0x2dacF6c4B10E39764A37801003f16059e7aAabba";
   const contractABI = abi.abi;
 
   const checkIfWalletIsConnected = async () => {
@@ -77,7 +78,7 @@ export default function App() {
         let count = await wavePortalContract.getTotalWaves();
         console.log("Retrieved total wave count...", count.toNumber());
 
-        const waveTxn = await wavePortalContract.wave("my first message");
+        const waveTxn = await wavePortalContract.wave("my first message", { gasLimit: 300000});
         console.log("Mining...", waveTxn.hash);
 
         await waveTxn.wait();
@@ -91,10 +92,10 @@ export default function App() {
     } catch (error) {
       console.log(error)
     }
-  }
+ }
 
-  const getTotalWaves = async () => {
-    try {
+ const getTotalStats = async () => {
+ try {
       const { ethereum } = window;
 
       if (ethereum) {
@@ -102,36 +103,18 @@ export default function App() {
         const signer = provider.getSigner();
         const wavePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
 
-        let count = await wavePortalContract.getTotalWaves();
-        console.log("Retrieved total wave count...", count.toNumber());
-        setCurrentTotalWaves(count.toNumber());
+        let wavesCount = await wavePortalContract.getTotalWaves();
+        setCurrentTotalWaves(wavesCount.toNumber());
+
+        let peopleCount = await wavePortalContract.getTotalPeople();
+        setCurrentTotalPeople(peopleCount.toNumber());
       } else {
         console.log("Ethereum object doesn't exist!");
       }
     } catch (error) {
       console.log(error)
     }
-  }
-
-  const getTotalPeople = async () => {
-    try {
-      const { ethereum } = window;
-
-      if (ethereum) {
-        const provider = new ethers.providers.Web3Provider(ethereum);
-        const signer = provider.getSigner();
-        const wavePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
-
-        let count = await wavePortalContract.getTotalPeople();
-        console.log("Retrieved total people count...", count.toNumber());
-        setCurrentTotalPeople(count.toNumber());
-      } else {
-        console.log("Ethereum object doesn't exist!");
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  }
+ }
 
   const setEventListener = async () => {
     try {
@@ -142,11 +125,15 @@ export default function App() {
         const signer = provider.getSigner();
         const wavePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
 
-        wavePortalContract.on("NewWave",(from, timestamp, message, totalWaves, totalPeople) => {
-          console.log("Wave created!", from, totalWaves, totalPeople);
-          setCurrentTotalWaves(totalWaves.toNumber());
-          setCurrentTotalPeople(totalPeople.toNumber());  
+        wavePortalContract.on("NewWave",(from, message, timestamp) => {
+          setAllWaves([...allWaves, {from, timestamp, message}]);
         });
+
+        wavePortalContract.on("NewStats", (totalWaves, totalPeople) => {
+          setCurrentTotalWaves(totalWaves.toNumber());
+          setCurrentTotalPeople(totalPeople.toNumber());
+        })
+
       } else {
         console.log("Ethereum object doesn't exist!");
       }
@@ -187,10 +174,9 @@ export default function App() {
 
   useEffect(() => {
     checkIfWalletIsConnected();
-    getTotalWaves();
-    getTotalPeople();
-    setEventListener();
+    getTotalStats();
     getAllWaves();
+    setEventListener();
   }, [])
   
   return (
@@ -223,9 +209,7 @@ export default function App() {
         {allWaves.map((wave, index) => {
           return (
             <div key={index} style={{ backgroundColor: "OldLace", marginTop: "16px", padding: "8px" }}>
-              <div>Address: {wave.from}</div>
-              <div>Time: {wave.timestamp.toString()}</div>
-              <div>Message: {wave.message}</div>
+              <Message wave={wave} /> 
             </div>)
         })}
 
