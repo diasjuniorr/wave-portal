@@ -73,6 +73,10 @@ export default function App() {
     try {
       const { ethereum } = window;
 
+      if (!currentAccount) {
+        throw new Error("No account connected!");
+      }
+
       if (ethereum) {
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
