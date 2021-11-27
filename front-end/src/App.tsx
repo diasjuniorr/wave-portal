@@ -138,6 +138,8 @@ export default function App() {
         const signer = provider.getSigner();
         const wavePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
 
+        wavePortalContract.removeAllListeners();
+
         wavePortalContract.on("NewWave",async (from, message, timestamp) => {
           const waves = await wavePortalContract.getAllWaves();
 
