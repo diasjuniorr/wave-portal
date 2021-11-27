@@ -143,7 +143,7 @@ export default function App() {
             });
           }); 
           
-          setAllWaves(wavesCleaned);
+          setAllWaves(wavesCleaned.reverse().slice(0,5));
         });
 
         wavePortalContract.on("NewStats", (totalWaves, totalPeople) => {
@@ -178,7 +178,7 @@ export default function App() {
           });
         });
 
-        setAllWaves(wavesCleaned);
+        setAllWaves(wavesCleaned.reverse().slice(0,5));
         console.log("ALLWAVES: ", allWaves)
       } else {
         console.log("Ethereum object doesn't exist!")
