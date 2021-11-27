@@ -62,8 +62,8 @@ export default function App() {
 
       console.log("Connected", accounts[0]);
       setCurrentAccount(accounts[0]); 
-      getAllWaves()
       getTotalStats()
+      getAllWaves()
     } catch (error: any) {
       toast.error(error.message);
       console.log(error)
@@ -105,6 +105,7 @@ export default function App() {
 
  const getTotalStats = async () => {
  try {
+      console.log("TA CHAMANDO")
       const { ethereum } = window;
 
       if (!currentAccount) return
@@ -199,10 +200,15 @@ export default function App() {
 
   useEffect(() => {
     checkIfWalletIsConnected();
-    getTotalStats();
-    getAllWaves();
     setEventListeners();
   }, [])
+
+  useEffect(() => {
+    getTotalStats();
+    getAllWaves();
+  } , [currentAccount])
+
+
   
   return (
     <div className="mainContainer">
