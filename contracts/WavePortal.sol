@@ -11,7 +11,8 @@ contract WavePortal {
     mapping(address => uint256) public addressToWaves;
     mapping(address => uint256) public lastWavedAt;
 
-    event NewWave(address indexed from, uint256 timestamp, string message, uint256 totalWaves, uint256 totalPeople);
+    event NewWave(address indexed from,  string message, uint256 timestamp);
+    event NewStats(uint256 totalWaves, uint256 totalPeople);
 
     struct Wave {
         address from;
@@ -31,14 +32,15 @@ contract WavePortal {
 
     function wave(string memory _message) public {
         require(
-            lastWavedAt[msg.sender] + 15 minutes < block.timestamp,
+            lastWavedAt[msg.sender]  < block.timestamp,
             "Wait 15m"
         );
 
         lastWavedAt[msg.sender] = block.timestamp;
         totalWaves += 1;
-
-        waves.push(Wave(msg.sender, _message, block.timestamp));
+        
+        uint256 timestamp = block.timestamp; 
+        waves.push(Wave(msg.sender, _message, timestamp));
 
         seed = (block.difficulty + block.timestamp + seed) % 100;
         
@@ -60,7 +62,8 @@ contract WavePortal {
             require(success, "Failed to withdraw money from contract.");
         }
 
-       emit NewWave(msg.sender, block.timestamp, _message, totalWaves, totalPeople);
+       emit NewWave(msg.sender, _message, timestamp);
+       emit NewStats(totalWaves, totalPeople);
     }
 
     function getTotalWaves() public view returns (uint256) {
