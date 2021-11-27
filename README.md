@@ -11,7 +11,8 @@
 
 This is a simple dapp that allows you to wave and leave a message on the blockchain. Everytime someone waves at this contract, there's a small chance they'll
 be rewarded with some [Ether](https://ethereum.org/). It's an example of how to deploy, read and write data to the blockchain using [Hardhat](https://hardhat.org/) 
-as the [Ethereum](https://ethereum.org/) development framekwork. 
+as the [Ethereum](https://ethereum.org/) development framekwork.
+You can see it live at [Wave Portal](https://wave-portal-nu.vercel.app/). Leave me a message 👋. 
 
 ## Getting Started <a name = "getting_started"></a>
 
