@@ -1,46 +1,45 @@
-# Getting Started with Create React App
+# my-wave-portal
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Table of Contents
 
-## Available Scripts
+- [About](#about)
+- [Getting Started](#getting_started)
+- [Workflow](#workflow)
+- [Testing the contract](#testing)
 
-In the project directory, you can run:
+## About <a name = "about"></a>
 
-### `yarn start`
+This is a simple dapp that allows you to wave and leave a message on the blockchain. Everytime someone waves at this contract, there's a small chance they'll
+be rewarded with some [Ether](https://ethereum.org/). It's an example of how to deploy, read and write data to the blockchain using [Hardhat](https://hardhat.org/) 
+as the [Ethereum](https://ethereum.org/) development framekwork. 
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Getting Started <a name = "getting_started"></a>
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+So this repo contains the code for the smart contract and the front-end. The main directory is where the smart contract code lives. The front-end is in the `front-end` directory.
 
-### `yarn test`
+You can start by installing the dependencies in the main directory and in the `front-end` directory:
+```
+npm install
+cd front-end
+//npm
+npm install
+//yarn
+yarn
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Worflow <a name = "workflow"></a>
 
-### `yarn build`
+In the main directory:
+- Deploy the contract to the blockchain using `npx run scripts/deploy --network <network>`.
+    - This will compile and deploy the contract to the specified network. This project used [rinkeby](https://rinkeby.etherscan.io/).
+    - Copy the contract address and  use it as the `contractAddress` in the front-end.
+    - Everytime you update the contract, you need to copy the new ABI into `front-end/src/utils/WavePortal.json`.
+    - You can automate the copy and paste by running `make abi`. 
+- `cd front-end` and run the dapp using `yarn start`. You're good to go!
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Testing the smart contract <a name = "testing"></a>
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+In the main directory:
+```
+npx hardhat test
+```
