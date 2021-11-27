@@ -32,10 +32,8 @@ export default function App() {
       if (!ethereum) {
         console.log("Make sure you have metamask!");
         return;
-      } else {
-        console.log("We have the ethereum object", ethereum);
-      }
-      
+      }       
+
       const accounts = await ethereum.request({ method: 'eth_accounts' });
       
       if (accounts.length !== 0) {
@@ -104,6 +102,8 @@ export default function App() {
  try {
       const { ethereum } = window;
 
+      if (!currentAccount) return
+
       if (ethereum) {
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
@@ -163,6 +163,9 @@ export default function App() {
   const getAllWaves = async () => {
     try {
       const { ethereum } = window;
+
+      if (!currentAccount) return
+      
       if (ethereum) {
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
