@@ -208,7 +208,7 @@ export default function App() {
 
         {allWaves.map((wave, index) => {
           return (
-            <div key={index} style={{ backgroundColor: "OldLace", marginTop: "16px", padding: "8px" }}>
+            <div key={index} >
               <Message wave={wave} /> 
             </div>)
         })}
